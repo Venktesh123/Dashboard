@@ -2,6 +2,7 @@ const Product = require("../models/product");
 
 // Create a Product
 exports.createProduct = async (req, res) => {
+  console.log("pk");
   try {
     const product = new Product(req.body);
     await product.save();
