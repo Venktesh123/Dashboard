@@ -56,35 +56,3 @@ exports.trackActivity = async (req, res) => {
   }
 };
 // controllers/activityController.js
-exports.getProductActivity = async (req, res) => {
-  try {
-    const { productId } = req.query;
-
-    if (!productId) {
-      return res.status(400).json({ message: "Product ID is required" });
-    }
-
-    // Aggregate activity data for the product
-    const activityData = await UserActivity.aggregate([
-      { $match: { productId: mongoose.Types.ObjectId(productId) } }, // Filter by product ID
-      {
-        $group: {
-          _id: "$action", // Group by action type (visit, click, view)
-          count: { $sum: 1 }, // Count occurrences of each action
-        },
-      },
-    ]);
-
-    // Format response data
-    const activitySummary = activityData.reduce((summary, activity) => {
-      summary[activity._id] = activity.count;
-      return summary;
-    }, {});
-
-    res.status(200).json({ productId, activitySummary });
-  } catch (err) {
-    res
-      .status(500)
-      .json({ message: "Error fetching activity data", error: err.message });
-  }
-};
