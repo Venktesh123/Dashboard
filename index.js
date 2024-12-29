@@ -5,6 +5,7 @@ const salesRoutes = require("./router/sales");
 const dashboard = require("./router/dashboard");
 const userRouter = require("./router/auth");
 const productRouter = require("./router/product");
+const authMiddleware = require("./middleware/authMiddleWare");
 require("dotenv").config();
 const app = express();
 app.use(express.json());
@@ -13,6 +14,7 @@ app.get("/", (req, res) => {
 });
 dbConnect();
 app.use("/api/auth", userRouter);
+app.use(authMiddleware);
 app.use("/api/product", productRouter);
 app.use("/api/activity", activityRoutes);
 app.use("/api/sales", salesRoutes);
